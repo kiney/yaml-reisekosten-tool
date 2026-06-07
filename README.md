@@ -4,6 +4,25 @@ Dieses Projekt erzeugt aus einer YAML-Datei Reisekostenabrechnungen als PDF. Das
 
 Die geplante Modulstruktur und der Datenfluss fuer die erste Python-Implementierung sind in `ARCHITECTURE.md` festgelegt.
 
+## Nutzung
+
+Der Standardaufruf fuer die erste nutzbare Version ist:
+
+```sh
+yaml-reisekosten-tool foo.yml
+```
+
+Ohne Zusatzargumente liest das Werkzeug genau diese YAML-Datei und schreibt die erzeugten PDF-Dateien in das aktuelle Arbeitsverzeichnis. Die Eingabedatei wird dabei nicht veraendert.
+
+PDF-Dateinamen werden aus Abrechnungszeitraum und Titel gebildet, zum Beispiel `2026-05-reisekosten-max-mustermann.pdf`. Wenn mehrere Abrechnungen in einer YAML-Datei erzeugt werden, erhalten sie nummerierte Suffixe wie `-01` und `-02`. Vorhandene PDFs werden standardmaessig nicht ueberschrieben; bei einer Namenskollision bricht die CLI mit einer klaren Fehlermeldung ab.
+
+Fuer den MVP sind nur wenige Optionen vorgesehen:
+
+- `--output-dir DIR`: PDF-Ausgabe in ein bestehendes, beschreibbares Verzeichnis schreiben.
+- `--force`: Bereits vorhandene Ziel-PDFs ueberschreiben.
+
+Fehlende Dateien, ungueltiges YAML, Schemafehler und Render-Fehler werden kurz auf stderr gemeldet und fuehren zu einem Exit-Code ungleich `0`. Details zum CLI- und Ausgabe-Kontrakt stehen in `ARCHITECTURE.md`.
+
 ## YAML-Format
 
 Ein Beispiel liegt unter `examples/example.yml`.

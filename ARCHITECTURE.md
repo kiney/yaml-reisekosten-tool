@@ -64,6 +64,47 @@ Fehler sollen moeglichst frueh und mit klarer Ursache gemeldet werden:
 
 Die CLI soll diese Fehler spaeter in lesbare Meldungen und nicht in rohe Tracebacks uebersetzen. Interne Exceptions duerfen trotzdem spezifisch bleiben, damit Tests sie eindeutig pruefen koennen.
 
+## CLI- und Ausgabe-Kontrakt
+
+Der erste nutzbare CLI-Einstieg ist bewusst klein:
+
+```sh
+yaml-reisekosten-tool foo.yml
+```
+
+Der Aufruf nimmt genau eine YAML-Datei als Eingabe. Ohne weitere Optionen schreibt das Werkzeug die erzeugten PDF-Dateien in das aktuelle Arbeitsverzeichnis, also in das Verzeichnis, aus dem der Befehl gestartet wurde. Die Eingabedatei wird nie veraendert. Im Erfolgsfall soll die CLI hoechstens die erzeugten PDF-Pfade ausgeben und keinen weiteren Arbeitsmuell im aktuellen Verzeichnis hinterlassen.
+
+### PDF-Dateinamen
+
+Dateinamen sollen stabil, lesbar und shell-freundlich sein:
+
+- Basis ist ein Slug aus dem Abrechnungszeitraum und dem Abrechnungstitel, zum Beispiel `2026-05_reisekosten_max-mustermann.pdf`.
+- Wenn kein brauchbarer Titel vorhanden ist, wird der Basisname der Eingabedatei verwendet, zum Beispiel `foo.pdf`.
+- Slugs verwenden Kleinbuchstaben, ASCII-Umschreibungen, Bindestriche statt Leerzeichen und keine Sonderzeichen, die auf ueblichen Dateisystemen Probleme machen.
+- Bei mehreren Abrechnungen aus einer YAML-Datei bekommt jede PDF-Datei denselben Basis-Slug plus einen eindeutigen Suffix, zum Beispiel `2026-05_reisekosten_max-mustermann-01.pdf` und `2026-05_reisekosten_max-mustermann-02.pdf`.
+- Eine vorhandene PDF-Datei wird standardmaessig nicht ueberschrieben. Bei Namenskollision bricht die CLI mit einer klaren Fehlermeldung ab und nennt den betroffenen Zielpfad.
+- Automatische Suffixe zur Kollisionsvermeidung wie `-2` werden nicht stillschweigend vergeben, weil wiederholte Abrechnungslaeufe sonst unbemerkt alte und neue Ergebnisse mischen koennen.
+
+### Fehlerverhalten
+
+Alle erwartbaren Fehler werden als kurze, nutzbare Meldung auf stderr ausgegeben. Der Prozess endet dann mit einem Exit-Code ungleich `0`; rohe Python-Tracebacks erscheinen nur in einem spaeteren Debug-Modus oder bei unerwarteten Programmierfehlern.
+
+- Fehlende oder nicht lesbare Eingabedatei: Abbruch vor YAML-Verarbeitung, Meldung nennt den Pfad.
+- Ungueltiges YAML oder leere Datei: Abbruch mit YAML-/Ladefehler und Pfad.
+- Ungueltige Struktur oder Feldwerte: Abbruch mit Feldpfad, Problem und nach Moeglichkeit erwartetem Format, zum Beispiel `fahrten[3].datum`.
+- Fachliche Fehler: Abbruch mit konkreter Ursache, etwa fehlende Pauschalentabelle fuer ein Jahr oder unplausible Zeiten.
+- Render-Fehler: Abbruch mit Hinweis auf Typst, Template oder Render-Ausgabe; falls Typst fehlt, nennt die Meldung die fehlende Runtime.
+- Ausgabekollision oder nicht beschreibbares Ausgabeverzeichnis: Abbruch vor dem Rendern oder vor dem finalen Schreiben, ohne vorhandene PDFs zu veraendern.
+
+### Optionale CLI-Argumente im MVP
+
+Fuer die erste Version werden nur Optionen aufgenommen, die den einfachen Standardaufruf nicht verkomplizieren:
+
+- `--output-dir DIR`: Schreibt die PDF-Dateien in `DIR` statt in das aktuelle Arbeitsverzeichnis. Das Verzeichnis muss existieren und beschreibbar sein.
+- `--force`: Erlaubt das Ueberschreiben bereits vorhandener Ziel-PDFs. Ohne diese Option ist Ueberschreiben verboten.
+
+Bewusst nicht Teil des MVP sind interaktive Prompts, Konfigurationsdateien, Batch-Verzeichnisse als Eingabe, mehrere Renderer, JSON-Logging, Watch-Modus, Dry-Run, Auswahl einzelner Abrechnungen und ein frei waehlbarer einzelner Output-Dateiname. Diese Optionen koennen spaeter als eigene Produktentscheidungen ergaenzt werden, wenn die einfache Pipeline stabil ist.
+
 ## Bewusst ausgelassener Scope
 
 Folgender Scope wird fuer die erste Architektur bewusst nicht eingeplant:
