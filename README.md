@@ -124,6 +124,16 @@ Kilometerpauschalen werden nicht im YAML gepflegt. Die Software soll eine intern
 
 Verpflegungspauschalen werden ebenfalls nicht im YAML gepflegt. Die Software soll sie aus Datum, Startzeit, Endzeit und den fuer das Kalenderjahr geltenden Regeln ermitteln.
 
+## Berechnungsregeln
+
+Die erste Berechnungsschicht verwendet interne Jahrestabellen. Fuer den MVP ist 2026 hinterlegt; fuer nicht hinterlegte Jahre bricht die Berechnung mit einem fachlichen Fehler ab, statt still falsche Werte zu verwenden.
+
+Fuer `verkehrsmittel: privater_pkw` gilt 2026 eine Kilometerpauschale von `0.30 EUR` pro tatsaechlich gefahrenem Kilometer. Die Berechnung nutzt `gesamt_km`, also die Gesamtstrecke inklusive Hin- und Rueckweg, und rundet Geldwerte kaufmaennisch auf Cent.
+
+Fuer eintagige Inlandsfahrten gilt 2026 eine Verpflegungspauschale von `14.00 EUR`, wenn die Abwesenheit mehr als acht Stunden betraegt. Der Grenzfall ist strikt: Genau `08:00` Stunden Abwesenheit ergeben keine Verpflegungspauschale; erst `08:01` Stunden ergeben `14.00 EUR`. Fuer 24 Stunden waeren `28.00 EUR` hinterlegt, auch wenn mehrtaegige Reisen im YAML-MVP noch nicht modelliert sind.
+
+Auslagen an Fahrten werden separat als Auslagenpositionen gehalten und zusaetzlich in die Gesamtsumme uebernommen.
+
 ## Architektur
 
 Siehe `ARCHITECTURE.md` fuer den geplanten Zuschnitt von CLI, YAML-I/O, Validierung, Normalisierung, Berechnung und Typst-Rendering.

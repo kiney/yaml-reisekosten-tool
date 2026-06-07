@@ -1,4 +1,4 @@
-"""Domain-Modelle fuer die Eingabedaten der Reisekostenabrechnung."""
+"""Domain-Modelle fuer Eingabe- und Berechnungsdaten der Reisekostenabrechnung."""
 
 from __future__ import annotations
 
@@ -96,6 +96,44 @@ class ReisekostenEingabe:
     arbeitgeber: Arbeitgeber
     defaults: Defaults
     fahrten: tuple[Fahrt, ...]
+
+
+@dataclass(frozen=True)
+class AuslagenPosition:
+    fahrt_index: int
+    datum: date
+    art: str
+    betrag_eur: Decimal
+    beschreibung: str
+    beleg: str | None = None
+
+
+@dataclass(frozen=True)
+class BerechneteFahrt:
+    index: int
+    fahrt: Fahrt
+    abwesenheit_minuten: int
+    kilometerpauschale_eur: Decimal
+    fahrtkosten_eur: Decimal
+    verpflegungspauschale_eur: Decimal
+    auslage: AuslagenPosition | None
+    gesamt_eur: Decimal
+
+
+@dataclass(frozen=True)
+class BerechnungsSummen:
+    fahrtkosten_eur: Decimal
+    verpflegungspauschalen_eur: Decimal
+    auslagen_eur: Decimal
+    gesamt_eur: Decimal
+
+
+@dataclass(frozen=True)
+class BerechneteAbrechnung:
+    eingabe: ReisekostenEingabe
+    fahrten: tuple[BerechneteFahrt, ...]
+    auslagen: tuple[AuslagenPosition, ...]
+    summen: BerechnungsSummen
 
 
 def models_from_mapping(data: Mapping[str, Any]) -> ReisekostenEingabe:
