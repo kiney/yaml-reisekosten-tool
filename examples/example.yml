@@ -1,0 +1,55 @@
+abrechnung:
+  titel: Reisekostenabrechnung
+  zeitraum:
+    von: 2026-01-01
+    bis: 2026-03-31
+  waehrung: EUR
+
+mitarbeiter:
+  name: Max Mustermann
+  personalnummer: "12345"
+  abteilung: IT
+
+arbeitgeber:
+  name: Beispiel GmbH
+  anschrift:
+    strasse: Stadtweg 8
+    plz: "54321"
+    ort: Musterstadt
+
+defaults:
+  fahrt:
+    start: Zuhause
+    ziel: Beispiel GmbH
+    anlass: Kundentermin vor Ort
+    verkehrsmittel: privater_pkw
+    fahrzeug:
+      kennzeichen: MS-MM 123
+      beschreibung: Privater PKW
+    gesamt_km: 84
+    startzeit: "07:45"
+    endzeit: "19:00"
+  auslage:
+    art: parken
+    betrag_eur: 12.00
+    beschreibung: Parkhaus am Kundenstandort
+
+fahrten:
+  - datum: 2026-01-08
+
+  - datum: 2026-01-15
+
+  - datum: 2026-01-22
+    gesamt_km: 98
+    notiz: Umfahrung wegen Stau auf der Standardstrecke
+
+  - datum: 2026-01-29
+    anlass: Workshop beim Kunden
+    auslage:
+      art: parken
+      betrag_eur: 14.00
+      beschreibung: Ausweichparkhaus
+
+  - datum: 2026-02-05
+    startzeit: "08:30"
+    endzeit: "16:30"

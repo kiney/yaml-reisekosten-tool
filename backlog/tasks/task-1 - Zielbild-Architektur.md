@@ -1,9 +1,10 @@
 ---
 id: TASK-1
 title: Zielbild / Architektur
-status: next
+status: In Progress
 assignee: []
 created_date: '2026-06-07 15:11'
+updated_date: '2026-06-07 15:18'
 labels: []
 dependencies: []
 ordinal: 1000
@@ -27,4 +28,6 @@ pytest
 Einfaches klares CLI interface. Ohne weitere argumente "yaml-reisekosten-tool foo.yml" erzeugt direkt im current directory die PDFs mit sinnvollen dateinamen ohne weiteren clutter.
 
 dokumentenerstellung: wir machen einen spike ob "typst" viable ist, sonst fallback auf latex.
+
+Projektsprache ist Deutsch.
 <!-- SECTION:DESCRIPTION:END -->

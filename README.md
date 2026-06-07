@@ -1,0 +1,79 @@
+# YAML Reisekosten Tool
+
+Dieses Projekt erzeugt aus einer YAML-Datei Reisekostenabrechnungen als PDF. Das YAML-Format ist darauf ausgelegt, wiederkehrende Kundentermine mit moeglichst wenig Schreibaufwand zu erfassen.
+
+## YAML-Format
+
+Ein Beispiel liegt unter `examples/example.yml`.
+
+Die Eingabedatei besteht aktuell aus diesen Bereichen:
+
+- `abrechnung`: Titel, Zeitraum und Waehrung der Abrechnung.
+- `mitarbeiter`: Angaben zur abrechnenden Person.
+- `arbeitgeber`: Angaben zum Arbeitgeber aus der Reisekostenabrechnung.
+- `defaults`: Wiederkehrende Werte fuer Fahrten und Auslagen.
+- `fahrten`: Liste der einzelnen Reisen oder Kundenfahrten.
+
+### Defaults und Overrides
+
+Wiederkehrende Angaben stehen unter `defaults`. Einzelne Fahrten und Auslagen erben diese Werte und ueberschreiben nur Abweichungen.
+
+Beispiel: Wenn alle Fahrten zum selben Kunden gehen, stehen `start`, `ziel`, `anlass`, `fahrzeug`, `gesamt_km`, `startzeit` und `endzeit` unter `defaults.fahrt`. Eine einzelne Fahrt braucht dann nur noch ein `datum`. Bei Stau oder Umfahrung kann diese Fahrt `gesamt_km` ueberschreiben.
+
+Gleiches gilt fuer Auslagen: Wiederkehrendes Parken kann unter `defaults.auslage` stehen. Eine Fahrt kann mit `auslage` nur die abweichenden Werte setzen, zum Beispiel einen anderen Betrag oder ein anderes Parkhaus.
+
+### Felder
+
+`abrechnung`:
+
+- `titel`: Titel fuer das PDF.
+- `zeitraum.von`: Beginn des Abrechnungszeitraums.
+- `zeitraum.bis`: Ende des Abrechnungszeitraums.
+- `waehrung`: Waehrung der Geldbetraege, aktuell `EUR`.
+
+`mitarbeiter`:
+
+- `name`: Name der abrechnenden Person.
+- `personalnummer`: Optional. Wird nicht gerendert, wenn leer oder nicht vorhanden.
+- `abteilung`: Optional. Wird nicht gerendert, wenn leer oder nicht vorhanden.
+
+`arbeitgeber`:
+
+- `name`: Name des Arbeitgebers.
+- `anschrift.strasse`: Strasse und Hausnummer.
+- `anschrift.plz`: Postleitzahl als String.
+- `anschrift.ort`: Ort.
+
+`defaults.fahrt` und einzelne Eintraege in `fahrten`:
+
+- `datum`: Datum der Fahrt. Nur in `fahrten` erforderlich.
+- `start`: Startort.
+- `ziel`: Zielort.
+- `anlass`: Anlass der Reise.
+- `verkehrsmittel`: Zum Beispiel `privater_pkw`.
+- `fahrzeug.kennzeichen`: Optionales Kennzeichen.
+- `fahrzeug.beschreibung`: Optionale Fahrzeugbeschreibung.
+- `gesamt_km`: Tatsaechlich gefahrene Gesamtstrecke, nicht einfache Entfernung.
+- `startzeit`: Uhrzeit als String im Format `HH:MM`.
+- `endzeit`: Uhrzeit als String im Format `HH:MM`.
+- `notiz`: Optionaler Hinweis fuer Sonderfaelle.
+- `auslage`: Optionale Auslage direkt an einer Fahrt.
+
+`defaults.auslage` und `auslage` an einer Fahrt:
+
+- `art`: Art der Auslage, zum Beispiel `parken`.
+- `betrag_eur`: Betrag in Euro.
+- `beschreibung`: Beschreibung der Auslage.
+- `beleg`: Optionaler Pfad zu einem Beleg.
+
+## Entscheidungen
+
+Es gibt keine automatische Verknuepfung zwischen `arbeitgeber` und `defaults.fahrt.ziel`. Der Arbeitgeber ist ein Feld der Abrechnung; das Fahrtziel ist eine explizite Eingabe.
+
+`gesamt_km` meint immer die tatsaechlich gefahrene Gesamtstrecke. Hin- und Rueckweg werden nicht automatisch aus einer einfachen Entfernung verdoppelt, weil Umwege, Einbahnstrassen oder Stauumfahrungen sonst falsch abgebildet werden koennen.
+
+Uhrzeiten bleiben Strings im Format `HH:MM`, damit YAML sie nicht als Sondertyp interpretiert.
+
+Kilometerpauschalen werden nicht im YAML gepflegt. Die Software soll eine interne Jahrestabelle anhand des Reisedatums verwenden.
+
+Verpflegungspauschalen werden ebenfalls nicht im YAML gepflegt. Die Software soll sie aus Datum, Startzeit, Endzeit und den fuer das Kalenderjahr geltenden Regeln ermitteln.
