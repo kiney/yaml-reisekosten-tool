@@ -1,10 +1,10 @@
 ---
 id: TASK-1.4
 title: CLI- und Ausgabe-Kontrakt festlegen
-status: To Do
+status: next
 assignee: []
 created_date: '2026-06-07 15:18'
-updated_date: '2026-06-07 15:18'
+updated_date: '2026-06-07 19:00'
 labels:
   - architecture
   - cli
@@ -13,7 +13,7 @@ dependencies:
   - TASK-1.3
 parent_task_id: TASK-1
 priority: medium
-ordinal: 5000
+ordinal: 1000
 ---
 
 ## Description

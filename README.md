@@ -2,6 +2,8 @@
 
 Dieses Projekt erzeugt aus einer YAML-Datei Reisekostenabrechnungen als PDF. Das YAML-Format ist darauf ausgelegt, wiederkehrende Kundentermine mit moeglichst wenig Schreibaufwand zu erfassen.
 
+Die geplante Modulstruktur und der Datenfluss fuer die erste Python-Implementierung sind in `ARCHITECTURE.md` festgelegt.
+
 ## YAML-Format
 
 Ein Beispiel liegt unter `examples/example.yml`.
@@ -77,3 +79,7 @@ Uhrzeiten bleiben Strings im Format `HH:MM`, damit YAML sie nicht als Sondertyp 
 Kilometerpauschalen werden nicht im YAML gepflegt. Die Software soll eine interne Jahrestabelle anhand des Reisedatums verwenden.
 
 Verpflegungspauschalen werden ebenfalls nicht im YAML gepflegt. Die Software soll sie aus Datum, Startzeit, Endzeit und den fuer das Kalenderjahr geltenden Regeln ermitteln.
+
+## Architektur
+
+Siehe `ARCHITECTURE.md` fuer den geplanten Zuschnitt von CLI, YAML-I/O, Validierung, Normalisierung, Berechnung und Typst-Rendering.

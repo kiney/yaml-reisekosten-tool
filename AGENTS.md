@@ -1,4 +1,11 @@
 
+## Project Context
+
+Before changing code or documentation in this repository, read:
+
+- `README.md` for the YAML format and user-facing project decisions.
+- `ARCHITECTURE.md` for the planned module structure, data flow, MVP boundaries, and rendering approach.
+
 <!-- BACKLOG.MD MCP GUIDELINES START -->
 
 <CRITICAL_INSTRUCTION>
