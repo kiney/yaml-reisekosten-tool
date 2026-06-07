@@ -1,13 +1,13 @@
 ---
 id: TASK-1
 title: Zielbild / Architektur
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-06-07 15:11'
-updated_date: '2026-06-07 15:18'
+updated_date: '2026-06-07 19:12'
 labels: []
 dependencies: []
-ordinal: 1000
+ordinal: 5000
 ---
 
 ## Description
